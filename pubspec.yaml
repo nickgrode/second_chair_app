@@ -13,6 +13,7 @@ dependencies:
   table_calendar: ^3.1.2  # Latest stable version
   path_provider: ^2.1.4  # Latest stable version
   path: ^1.9.0  # Latest stable version
+  flutter_lints: ^1.0.0
 
 dev_dependencies:
   flutter_test:

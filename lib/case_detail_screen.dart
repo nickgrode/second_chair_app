@@ -1,4 +1,3 @@
-// File: C:\Users\nickg\Projects\second_chair\lib\case_detail_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../database_helper.dart';
@@ -11,6 +10,13 @@ class CaseDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<AppDatabase>(context);
+    // Create the stream for watching a single case
+    final caseStream = () {
+      final query = database.select(database.cases); // Step 1: Pick the table
+      query.where((tbl) => tbl.id.equals(caseId));   // Step 2: Add the condition
+      return query.watchSingle();                    // Step 3: Watch for updates
+    }();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Case Details'),
@@ -32,7 +38,7 @@ class CaseDetailScreen extends StatelessWidget {
         ],
       ),
       body: StreamBuilder<Case>(
-        stream: (database.select(database.cases)..where((tbl) => tbl.id.equals(caseId))).watchSingle(),
+        stream: caseStream, // Use the new stream
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
           final caseItem = snapshot.data!;

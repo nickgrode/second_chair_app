@@ -1,4 +1,3 @@
-// File: C:\Users\nickg\Projects\second_chair\lib\client_detail_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../database_helper.dart';
@@ -13,6 +12,19 @@ class ClientDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<AppDatabase>(context);
+    // Stream for watching client details
+    final clientStream = () {
+      final query = database.select(database.clients);
+      query.where((tbl) => tbl.id.equals(clientId));
+      return query.watchSingle();
+    }();
+    // Stream for watching all cases for this client
+    final casesStream = () {
+      final query = database.select(database.cases);
+      query.where((tbl) => tbl.clientId.equals(clientId));
+      return query.watch();
+    }();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Client Details'),
@@ -33,7 +45,7 @@ class ClientDetailScreen extends StatelessWidget {
       body: Column(
         children: [
           StreamBuilder<Client>(
-            stream: (database.select(database.clients)..where((tbl) => tbl.id.equals(clientId))).watchSingle(),
+            stream: clientStream, // Use the new client stream
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const CircularProgressIndicator();
               final client = snapshot.data!;
@@ -52,7 +64,7 @@ class ClientDetailScreen extends StatelessWidget {
           ),
           Expanded(
             child: StreamBuilder<List<Case>>(
-              stream: (database.select(database.cases)..where((tbl) => tbl.clientId.equals(clientId))).watch(),
+              stream: casesStream, // Use the new cases stream
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
                 final cases = snapshot.data!;

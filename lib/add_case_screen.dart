@@ -35,7 +35,9 @@ class _AddCaseScreenState extends State<AddCaseScreen> {
     });
     if (widget.caseId != null) {
       final database = Provider.of<AppDatabase>(context, listen: false);
-      database.select(database.cases).where((tbl) => tbl.id.equals(widget.caseId!)).getSingle().then((c) {
+      (database.select(database.cases)..where((tbl) => tbl.id.equals(widget.caseId!)))
+          .getSingle()
+          .then((c) {
         setState(() {
           caseItem = c;
           jurisdictionType = c.jurisdictionType;

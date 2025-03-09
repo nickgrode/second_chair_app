@@ -1,5 +1,4 @@
 // File: C:\Users\nickg\Projects\second_chair\lib\case_detail_screen.dart
-import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../database_helper.dart';

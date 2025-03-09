@@ -22,7 +22,9 @@ class _AddClientScreenState extends State<AddClientScreen> {
     super.initState();
     if (widget.clientId != null) {
       final database = Provider.of<AppDatabase>(context, listen: false);
-      database.select(database.clients).where((tbl) => tbl.id.equals(widget.clientId!)).getSingle().then((c) {
+      (database.select(database.clients)..where((tbl) => tbl.id.equals(widget.clientId!)))
+          .getSingle()
+          .then((c) {
         setState(() {
           client = c;
           firstName = c.firstName;
@@ -86,8 +88,8 @@ class _AddClientScreenState extends State<AddClientScreen> {
                         client!.copyWith(
                           firstName: firstName!,
                           lastName: lastName!,
-                          email: email,
-                          phone: phone,
+                          email: Value(email),
+                          phone: Value(phone),
                         ),
                       );
                     }
